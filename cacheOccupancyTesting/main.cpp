@@ -12,13 +12,13 @@
 #include <random>
 #include <sys/time.h>
 #include "pointerManaging.hpp"
+#include <unistd.h>
 //#include <cstdio>
 
 using namespace std;
 
 int64_t counterVal = 0;
 bool run = true;
-int *dummyArr;
 int64_t *timeVals;
 
 
@@ -34,6 +34,82 @@ void timerFunc() {
 
 int main(int argc, const char * argv[]) {
        
+    
+    
+    FILE *myFile = fopen("/Users/patrickcronin/Dropbox/Patrick/udel/WINTER2021/CacheOccupancy/pythonExaminer/test.txt", "w");
+    thread countThread(timerFunc);
+    
+    
+
+    
+    int maxSize = 5001;
+    int maxIterations = 500;
+    int timeCount = 0;
+    volatile int temp;
+    
+    timeVals = (int64_t*)malloc(maxIterations*100*sizeof(int64_t));
+    
+    for(int size = 1; size <= maxSize; size+=500) {
+        
+        
+        
+        
+        for(int iteration = 0; iteration < maxIterations; iteration++) {
+        
+            pointerPage **data = (pointerPage**)malloc(sizeof(pointerPage *) * size);
+            for (int i = 0; i < size; i++) {
+                data[i] = (pointerPage*)valloc(sizeof(pointerPage));
+            }
+            
+            //generateRandomBook(data, size);
+            generateStraightBook(data, size);
+            
+            doubleLine *old = data[0]->d[0].next;
+            //prime
+            for(int i = 0; i < 32*size-1; i++) {
+                old = old->next;
+            }
+            
+            //probe
+            int64_t start = counterVal;
+            old = data[0]->d[0].next;
+            for(int i = 0; i < 32*size-1; i++) {
+                old = old->next;
+            }
+            
+            int64_t end = counterVal;
+            
+            timeVals[timeCount++] = end-start;
+            
+            for (int i = 0; i < size; i++) {
+                free(data[i]);
+            }
+            free(data);
+            
+            printf("%d %d/%d\n", size, iteration, 1000);
+        }
+        
+        
+        
+        
+        
+               
+    }
+    
+    run = false;
+    for(int i = 0; i < timeCount; i++) {
+        fprintf(myFile, "%d %d %lld\n", 1, 1, timeVals[i]);
+    }
+    
+    fclose(myFile);
+    
+    countThread.join();
+    
+    
+    
+    
+    
+    /*
     if(argc == 2) {
         char buffer[200];
         sprintf(buffer, "/Users/patrickcronin/Dropbox/Patrick/udel/WINTER2021/CacheOccupancy/pythonExaminer/%s.txt", argv[1]);
@@ -91,6 +167,7 @@ int main(int argc, const char * argv[]) {
     } else {
         printf("provide a file name\n");
     }
+     */
     return 0;
 }
 

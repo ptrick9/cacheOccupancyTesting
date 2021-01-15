@@ -26,6 +26,7 @@ typedef struct{
 
 
 void generateRandomBook(pointerPage **book, int numPages);
+void generateStraightBook(pointerPage **book, int numPages);
 
 
 #endif /* pointerManaging_hpp */
