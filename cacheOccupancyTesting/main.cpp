@@ -46,19 +46,20 @@ int main(int argc, const char * argv[]) {
     int maxIterations = 500;
     int timeCount = 0;
     volatile int temp;
+    int numLines = 32;
     
     timeVals = (int64_t*)malloc(maxIterations*100*sizeof(int64_t));
     
     for(int size = 1; size <= maxSize; size+=500) {
         
         
-        
-        
         for(int iteration = 0; iteration < maxIterations; iteration++) {
         
-            pointerPage **data = (pointerPage**)malloc(sizeof(pointerPage *) * size);
+            
+            numLines=32;
+            doublePointerPage **data = (doublePointerPage**)malloc(sizeof(doublePointerPage *) * size);
             for (int i = 0; i < size; i++) {
-                data[i] = (pointerPage*)valloc(sizeof(pointerPage));
+                data[i] = (doublePointerPage*)valloc(sizeof(doublePointerPage));
             }
             
             //generateRandomBook(data, size);
@@ -70,10 +71,26 @@ int main(int argc, const char * argv[]) {
                 old = old->next;
             }
             
+            /*
+            numLines=64
+            singlePointerPage **data = (singlePointerPage**)malloc(sizeof(doublePointerPage *) * size);
+            for (int i = 0; i < size; i++) {
+                data[i] = (singlePointerPage*)valloc(sizeof(doublePointerPage));
+            }
+            
+            generateRandomBook(data, size);
+            //generateStraightBook(data, size);
+            
+            singleLine *old = data[0]->d[0].next;
+            //prime
+            for(int i = 0; i < 64*size-1; i++) {
+                old = old->next;
+            }*/
+            
             //probe
             int64_t start = counterVal;
             old = data[0]->d[0].next;
-            for(int i = 0; i < 32*size-1; i++) {
+            for(int i = 0; i < numLines*size-1; i++) {
                 old = old->next;
             }
             

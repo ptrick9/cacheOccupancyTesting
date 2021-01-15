@@ -10,23 +10,34 @@
 
 #include <stdio.h>
 
+
+
 typedef struct doubleLine{
     struct doubleLine* next;
     int filler[30];
 }doubleLine;
 
+typedef struct singleLine{
+    struct singleLine* next;
+    int filler[14];
+}singleLine;
+
 typedef struct{
     doubleLine d[32];
-}pointerPage;
-
+}doublePointerPage;
 
 typedef struct{
-    pointerPage page[256];
-}pointer_book;
+    singleLine d[64];
+}singlePointerPage;
 
 
-void generateRandomBook(pointerPage **book, int numPages);
-void generateStraightBook(pointerPage **book, int numPages);
+
+
+void generateRandomBook(doublePointerPage **book, int numPages);
+void generateStraightBook(doublePointerPage **book, int numPages);
+
+void generateRandomBook(singlePointerPage **book, int numPages);
+void generateStraightBook(singlePointerPage **book, int numPages);
 
 
 #endif /* pointerManaging_hpp */
